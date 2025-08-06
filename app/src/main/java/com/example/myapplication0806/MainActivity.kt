@@ -23,6 +23,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Wallpapers
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.example.myapplication0806.ui.theme.MyApplication0806Theme
@@ -47,7 +52,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyApplication0806Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    test(innerPadding)
+                    Refactoring(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -482,94 +487,177 @@ fun Mission() {
 
 @Preview(showBackground = false)
 @Composable
-fun Refactoring() {
-            Column(
-                verticalArrangement = Arrangement.Bottom,
-                modifier = Modifier
-                    .width(400.dp)
-                    .height(220.dp)
-                    .background(Color.LightGray)
-                    .padding(bottom = 12.dp, start = 12.dp, end = 12.dp)
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                        .background(Color(0xFFffffff), shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp))
-                        .padding(16.dp)
-                ) {
-                    // + 1 - 부분
-                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        Column(
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .size(40.dp)
-                                .background(Color(0xFFffffff), shape = RoundedCornerShape(percent = 50))
-                                .border(border = BorderStroke(width = 1.dp, color = Color(0xFFdddddd)), shape = RoundedCornerShape(percent = 50))
-                        ) {
-                            Text("-", style = titleTextStyle7)
-                        }
-                        Column(
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .size(40.dp)
-//                                .background(Color(0xFFffffff), shape = RoundedCornerShape(percent = 50))
+fun Refactoring(optionbuttonText : String = "수량 저장하기", count: Int = 1000000000, price: Int = 1000000000, modifier: Modifier = Modifier) {
+    MyWallpaper() {
+        // 물건 구매 버튼 세트
+        ProduceBuyUI(optionbuttonText, count, price, modifier)
+    }
+}
 
-                        ) {
-                            Text("1", style = titleTextStyle7)
-                        }
-                        Column(
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .size(40.dp)
-                                .background(Color(0xFFffffff), shape = RoundedCornerShape(percent = 50))
-                                .border(border = BorderStroke(width = 1.dp, color = Color(0xFFdddddd)), shape = RoundedCornerShape(percent = 50))
-                        ) {
-                            Text("+", style = titleTextStyle7)
-                        }
-                    }
-                    // 4,600원
-                    Text("4,600 원", style = titleTextStyle7)
-                }
+@Composable
+fun MyWallpaper(content: @Composable () -> Unit) {
+    Column(
+        modifier = Modifier
+            .width(400.dp)
+            .height(140.dp)
+            .background(Color.LightGray)
+            .padding(bottom = 12.dp, start = 12.dp, end = 12.dp)
+    ) {
+        content()
+    }
+}
 
-                // 공간을 위한 스페이서
-                Spacer(modifier = Modifier.height(20.dp))
+@Composable
+fun ProduceBuyUI(optionbuttonText : String, count: Int, price: Int, modifier: Modifier = Modifier) {
+    Column(verticalArrangement = Arrangement.Center,
+        modifier = modifier
+//            .fillMaxWidth()
+            .width(376.dp)
+//            .fillMaxHeight()
+            .height(128.dp)
+            .background(Color(0xFFffffff), shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp))
+            .padding(16.dp)
+            .zIndex(1f)
+    ) {
+        // 상단 버튼, 가격 세트
+        PriceButtonSet(count, price, modifier)
+        // 스페이서
+        RowSpacer(modifier = Modifier.weight(1f))
+        // 하단 버튼 세트
+        FavoriteAndOptionButtonSet(optionbuttonText, modifier)
+    }
+}
 
-                // 밑에 줄
-                Row(modifier = Modifier.height(60.dp)) {
+@Composable
+fun PriceButtonSet(count: Int, price: Int, modifier: Modifier = Modifier) {
+    Row(verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(40.dp)
+    ) {
+        // + 1 - 부분
+        PlusMinusButtonSet(count, modifier)
+        // 가격표
+        MyPriceTag(price, modifier = Modifier.weight(1f, fill = false))
+    }
+}
 
-                    // 하트
-                    Column(
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .fillMaxHeight(1f)
-                            .width(60.dp)
-                            .background(Color.Green.copy(0.3f))) {
-                        Text("하트")
-                    }
+@Composable
+fun PlusMinusButtonSet(count: Int, modifier: Modifier = Modifier) {
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .fillMaxHeight()
+    ) {
+        // 마이너스
+        MinusButton(modifier)
+        // 수량
+        ProductCount(count, modifier = Modifier.weight(1f, fill = false))
+        // 플러스
+        PlusButton(modifier)
+    }
+}
 
-                    // 공간
-                    Spacer(modifier = Modifier.width(10.dp))
+@Composable
+fun MinusButton(modifier: Modifier = Modifier) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .size(32.dp)
+            .background(Color(0xFFffffff), shape = RoundedCornerShape(percent = 50))
+            .border(border = BorderStroke(width = 1.dp, color = Color(0xFFdddddd)), shape = RoundedCornerShape(percent = 50))
+    ) {
+        Text("-", style = titleTextStyle7)
+    }
+}
 
-                    // 옵션 저장하기 버튼
-                    Column(
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight(1f)
-                            .background(Color(0xFFe95241))
-                    ) {
-                        Text("옵션 저장하기")
-                    }
+@Composable
+fun ProductCount(count: Int, modifier: Modifier = Modifier) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .fillMaxHeight()
+    ) {
+        Text("$count", style = titleTextStyle7)
+    }
+}
 
-                }
-            }
-        }
+@Composable
+fun PlusButton(modifier: Modifier = Modifier) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .size(32.dp)
+            .background(Color(0xFFffffff), shape = RoundedCornerShape(percent = 50))
+            .border(border = BorderStroke(width = 1.dp, color = Color(0xFFdddddd)), shape = RoundedCornerShape(percent = 50))
+    ) {
+        Text("+", style = titleTextStyle7)
+    }
+}
+
+@Composable
+fun MyPriceTag(price: Int, modifier: Modifier = Modifier) {
+    Text("${price}원", style = titleTextStyle7) //sibal 한글 때문이었네?
+
+}
+
+@Composable
+fun RowSpacer(modifier: Modifier = Modifier) {
+    Spacer(modifier = modifier
+
+    )
+}
+
+@Composable
+fun FavoriteAndOptionButtonSet(optionbuttonText : String = "옵션 저장하기", modifier: Modifier = Modifier) {
+    Row(verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(40.dp)
+    ) {
+        // 좋아요 버튼
+        FavoriteButton(modifier)
+        // 옵션 저장 버튼
+        MyOptionButton(optionbuttonText, modifier)
+    }
+}
+
+@Composable
+fun FavoriteButton(modifier: Modifier = Modifier) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .size(40.dp)
+            .background(Color(0xFFdddddd), shape = RoundedCornerShape(percent = 50))
+
+    ) {
+        Icon(
+            imageVector = Icons.Default.Favorite,
+            contentDescription = "좋아요",
+            tint = Color(0xFFffffff),
+            modifier = Modifier
+                .size(20.dp)
+
+        )
+    }
+}
+
+@Composable
+fun MyOptionButton(optionbuttonText: String, modifier: Modifier = Modifier) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .size(height = 40.dp, width = 280.dp)
+            .background(Color(0xFFe95241), shape = RoundedCornerShape(8.dp))
+
+    ) {
+        Text("$optionbuttonText", style = titleTextStyle8)
+    }
+}

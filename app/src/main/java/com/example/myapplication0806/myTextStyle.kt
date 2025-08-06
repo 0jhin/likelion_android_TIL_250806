@@ -45,3 +45,9 @@ val titleTextStyle7 = TextStyle(
     fontWeight = FontWeight.ExtraBold,
     color = Color(0xFF000000)
 )
+
+val titleTextStyle8 = TextStyle(
+//    fontSize = 20.sp,
+    fontWeight = FontWeight.Bold,
+    color = Color(0xFFffffff)
+)

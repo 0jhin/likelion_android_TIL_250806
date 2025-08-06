@@ -26,7 +26,7 @@ import com.example.myapplication0806.ui.theme.MyApplication0806Theme
 fun Mission02Preview() {
     MyApplication0806Theme {
         // 전체 컬럼
-        AllLines(count = 3, price = 5000, optionName = "수량 저장하기", height = 40.dp)
+        PurchaseFunction(count = 3, price = 5000, optionName = "수량 저장하기", height = 40.dp)
     }
 }
 
@@ -45,7 +45,7 @@ fun HeartComponent() {
 }
 
 @Composable
-fun OpptionButton(optionName: String, modifier: Modifier = Modifier) {
+fun OptionButton(optionName: String, modifier: Modifier = Modifier) {
     // 옵션 저장하기 버튼
     Column(
         verticalArrangement = Arrangement.Center,
@@ -128,13 +128,13 @@ fun BottomLine(optionName: String) {
         Spacer(modifier = Modifier.width(10.dp))
 
         // 옵션 저장하기 버튼
-        OpptionButton(optionName = optionName, modifier = Modifier.weight(1f))
+        OptionButton(optionName = optionName, modifier = Modifier.weight(1f))
 
     }
 }
 
 @Composable
-fun AllLines(count: Int = 1, height: Dp, price: Int, optionName: String = "옵션 저장하기") {
+fun PurchaseFunction(count: Int = 1, height: Dp = 20.dp, price: Int, optionName: String = "옵션 저장하기") {
 // 전체 컬럼
     Column(
         verticalArrangement = Arrangement.Bottom,
